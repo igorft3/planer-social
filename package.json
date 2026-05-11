@@ -1,13 +1,16 @@
 {
-  "name": "planner-social",
+  "name": "planer-social",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://igorft3.github.io/planer-social/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "rm -rf dist && npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "mobx": "^6.15.3",
@@ -29,6 +32,7 @@
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "gh-pages": "^6.3.0",
     "globals": "^17.6.0",
     "prettier": "3.8.3",
     "typescript": "~6.0.2",
