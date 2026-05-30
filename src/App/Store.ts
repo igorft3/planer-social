@@ -64,7 +64,7 @@ export class Todo {
     };
 
     postTodosApi(newObject)
-      .then((res) => {
+      .then(() => {
         runInAction(() => {
           this.state = STATUS_MAP.SUCCESS;
           this.getTodos();
@@ -81,7 +81,7 @@ export class Todo {
     this.state = STATUS_MAP.PENDING;
 
     deleteTodosApi(id)
-      .then((res) => {
+      .then(() => {
         runInAction(() => {
           this.getTodos();
           this.state = STATUS_MAP.SUCCESS;
