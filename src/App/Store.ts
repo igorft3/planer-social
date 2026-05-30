@@ -1,41 +1,96 @@
-import { makeAutoObservable } from "mobx";
-
-interface TodoArrayValue {
-  id: string;
-  text: string;
-  done: boolean;
-  date: Date;
-}
+import { makeAutoObservable, runInAction } from "mobx";
+import { getTodosApi, postTodosApi, deleteTodosApi } from "./api.ts";
+import type { TodoArrayValue, StatusType } from "./types.ts";
+import { STATUS_MAP } from "./types.ts";
 
 export class Todo {
   todoArray: TodoArrayValue[] = [
-    { id: "123", text: "Example", done: true, date: new Date() },
+    // { id: "1234", text: "Example", isDone: true, date: new Date() },
   ];
+
+  state: StatusType = STATUS_MAP.PENDING;
 
   constructor() {
     makeAutoObservable(this);
+    this.getTodos();
   }
   // CRUD
 
-  createTodo(text: string) {
-    const newObject = {
-      id: crypto.randomUUID().toString(),
-      text: text,
-      done: false,
-      date: new Date(),
-    };
+  // createTodo(text: string) {
+  //   const newObject = {
+  //     id: crypto.randomUUID().toString(),
+  //     text: text,
+  //     isDone: false,
+  //     date: new Date(),
+  //   };
+  //
+  //   this.todoArray.push(newObject);
+  // }
 
-    this.todoArray.push(newObject);
-  }
-
-  deleteTodo(id: string) {
-    this.todoArray = this.todoArray.filter((item) => item.id !== id);
-  }
+  // deleteTodo(id: string) {
+  //   this.todoArray = this.todoArray.filter((item) => item.id !== id);
+  // }
 
   toggleTodo(id: string) {
     const todoId = this.todoArray.find((item) => item.id === id);
     if (todoId) {
-      todoId.done = !todoId.done;
+      todoId.isDone = !todoId.isDone;
     }
+  }
+
+  getTodos() {
+    this.state = STATUS_MAP.PENDING;
+    getTodosApi()
+      .then((items) => {
+        runInAction(() => {
+          this.todoArray = items;
+          this.state = STATUS_MAP.SUCCESS;
+        });
+      })
+      .catch(() => {
+        runInAction(() => {
+          this.state = STATUS_MAP.ERROR;
+        });
+      });
+  }
+
+  postTodo(text: string) {
+    this.state = STATUS_MAP.PENDING;
+    const newObject = {
+      id: crypto.randomUUID().toString(),
+      text: text,
+      isDone: false,
+      date: new Date().toISOString(),
+    };
+
+    postTodosApi(newObject)
+      .then((res) => {
+        runInAction(() => {
+          this.state = STATUS_MAP.SUCCESS;
+          this.getTodos();
+        });
+      })
+      .catch(() => {
+        runInAction(() => {
+          this.state = STATUS_MAP.ERROR;
+        });
+      });
+  }
+
+  deleteTodosApi(id: string) {
+    this.state = STATUS_MAP.PENDING;
+
+    deleteTodosApi(id)
+      .then((res) => {
+        runInAction(() => {
+          this.getTodos();
+          this.state = STATUS_MAP.SUCCESS;
+        });
+      })
+      .catch(() => {
+        runInAction(() => {
+          this.state = STATUS_MAP.ERROR;
+        });
+      });
   }
 }

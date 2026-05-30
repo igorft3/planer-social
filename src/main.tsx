@@ -1,22 +1,26 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+
+import { HashRouter, Route, Routes } from "react-router";
 import App from "./App/App.tsx";
-import { BrowserRouter, Route, Routes } from "react-router";
+
 import { Add } from "./Pages/Add.tsx";
-import { History } from "./Pages/History.tsx";
+import { Manager } from "./Pages/Manager.tsx";
+import { SocialManager } from "./Pages/SocialManager.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path={"/"} element={<App />}>
-          <Route index element={<Add />} />
+          <Route index element={<Manager />} />
           <Route path={"add"} element={<Add />} />
-          <Route path={"history/"} element={<History />} />
+          <Route path={"manager/"} element={<Manager />} />
+          <Route path={"social/"} element={<SocialManager />} />
         </Route>
         <Route path={"*"} element={<>Nothing </>} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 );

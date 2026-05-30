@@ -13,10 +13,10 @@ export const NavigationBar = () => {
         style={styles}
         to={"/"}
       >
-        Add
+        Your'e Manager
       </NavLink>
-      <Link style={styles} to={"History"}>
-        History
+      <Link style={styles} to={"social"}>
+        Social Manager
       </Link>
     </div>
   );
