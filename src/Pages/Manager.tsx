@@ -44,7 +44,7 @@ export const Manager = observer(() => {
             <p>{item.text}</p>
             <p style={{ marginLeft: "auto" }}>id: {item.id.slice(0, 4)}</p>
             <button onClick={() => myTodo.toggleTodo(item.id)}>Done</button>
-            <button onClick={() => myTodo.deleteTodosApi(item.id)}>x</button>
+            <button onClick={() => myTodo.deleteTodo(item.id)}>x</button>
           </li>
         </ul>
       ))}
