@@ -77,7 +77,7 @@ export class Todo {
       });
   }
 
-  deleteTodosApi(id: string) {
+  deleteTodo(id: string) {
     this.state = STATUS_MAP.PENDING;
 
     deleteTodosApi(id)

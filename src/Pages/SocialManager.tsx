@@ -1,7 +1,8 @@
-import { Todo } from "../App/Store.ts";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { Todo } from "../App/Store.ts";
 import styles from "./history.module.css";
+
 const socialTodos = new Todo();
 
 export const SocialManager = observer(() => {
@@ -9,7 +10,7 @@ export const SocialManager = observer(() => {
 
   const handleCreateTodo = () => {
     if (input.length) {
-      socialTodos.createTodo(input);
+      socialTodos.postTodo(input);
       setInput("");
     }
   };
