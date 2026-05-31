@@ -14,6 +14,7 @@ export const Manager = observer(() => {
       setInput("");
     }
   };
+  // console.log(myTodo.todoArray);
   return (
     <>
       <h2>
@@ -35,7 +36,7 @@ export const Manager = observer(() => {
         <ul key={index}>
           <li
             style={{
-              backgroundColor: `${item.isDone ? "rgba(2, 185, 13, 0.26)" : "rgba(255, 38, 0, 0.55)"}`,
+              backgroundColor: `${item.isDone ? "rgba(2, 185, 13, 0.26)" : ""}`,
             }}
             className={styles.listItem}
           >

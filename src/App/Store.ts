@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { getTodosApi, postTodosApi, deleteTodosApi } from "./api.ts";
+import { postTodosApi, deleteTodosApi, getTodosApi } from "./api.ts";
 import type { TodoArrayValue, StatusType } from "./types.ts";
 import { STATUS_MAP } from "./types.ts";
 
@@ -10,9 +10,23 @@ export class Todo {
 
   state: StatusType = STATUS_MAP.PENDING;
 
+  currentUser = {
+    id: "blablac13",
+    name: "Igor",
+    login: "igorft3",
+    password: "123",
+  };
+  newUser = {
+    id: "471cBw61",
+    name: "Vlad",
+    login: "radigos",
+    password: "321",
+  };
+
   constructor() {
     makeAutoObservable(this);
-    this.getTodos();
+    this.getTodos(this.currentUser.id);
+    // this.getSomeThin(this.currentUser.id);
   }
   // CRUD
 
@@ -38,21 +52,21 @@ export class Todo {
     }
   }
 
-  getTodos() {
-    this.state = STATUS_MAP.PENDING;
-    getTodosApi()
-      .then((items) => {
-        runInAction(() => {
-          this.todoArray = items;
-          this.state = STATUS_MAP.SUCCESS;
-        });
-      })
-      .catch(() => {
-        runInAction(() => {
-          this.state = STATUS_MAP.ERROR;
-        });
-      });
-  }
+  // getTodos() {
+  //   this.state = STATUS_MAP.PENDING;
+  //   getTodosApi()
+  //     .then((items) => {
+  //       runInAction(() => {
+  //         this.todoArray = items;
+  //         this.state = STATUS_MAP.SUCCESS;
+  //       });
+  //     })
+  //     .catch(() => {
+  //       runInAction(() => {
+  //         this.state = STATUS_MAP.ERROR;
+  //       });
+  //     });
+  // }
 
   postTodo(text: string) {
     this.state = STATUS_MAP.PENDING;
@@ -67,7 +81,7 @@ export class Todo {
       .then(() => {
         runInAction(() => {
           this.state = STATUS_MAP.SUCCESS;
-          this.getTodos();
+          this.getTodos(this.currentUser.id);
         });
       })
       .catch(() => {
@@ -83,7 +97,23 @@ export class Todo {
     deleteTodosApi(id)
       .then(() => {
         runInAction(() => {
-          this.getTodos();
+          this.getTodos(this.currentUser.id);
+          this.state = STATUS_MAP.SUCCESS;
+        });
+      })
+      .catch(() => {
+        runInAction(() => {
+          this.state = STATUS_MAP.ERROR;
+        });
+      });
+  }
+
+  getTodos(id: string) {
+    this.state = STATUS_MAP.PENDING;
+    getTodosApi(id)
+      .then((items) => {
+        runInAction(() => {
+          this.todoArray = items[0].todos;
           this.state = STATUS_MAP.SUCCESS;
         });
       })

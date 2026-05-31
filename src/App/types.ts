@@ -11,4 +11,12 @@ export const STATUS_MAP = {
   SUCCESS: "success",
 } as const;
 
+export interface storeTodos {
+  id: string;
+  name: string;
+  author: string;
+  members: Array<string>;
+  todos: Array<[]>;
+}
+
 export type StatusType = (typeof STATUS_MAP)[keyof typeof STATUS_MAP];
