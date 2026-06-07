@@ -1,5 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { postTodosApi, deleteTodosApi, getTodosApi } from "./api.ts";
+import {
+  postTodosApi,
+  deleteTodosApi,
+  getTodosApi,
+  toggleTodosApi,
+} from "./api.ts";
 import type { TodoArrayValue, StatusType } from "./types.ts";
 import { STATUS_MAP } from "./types.ts";
 
@@ -25,7 +30,8 @@ export class Todo {
 
   constructor() {
     makeAutoObservable(this);
-    this.getTodos(this.currentUser.id);
+    // this.getTodos(this.newUser.id);
+    this.getTodos();
     // this.getSomeThin(this.currentUser.id);
   }
   // CRUD
@@ -45,28 +51,28 @@ export class Todo {
   //   this.todoArray = this.todoArray.filter((item) => item.id !== id);
   // }
 
-  toggleTodo(id: string) {
-    const todoId = this.todoArray.find((item) => item.id === id);
-    if (todoId) {
-      todoId.isDone = !todoId.isDone;
-    }
-  }
-
-  // getTodos() {
-  //   this.state = STATUS_MAP.PENDING;
-  //   getTodosApi()
-  //     .then((items) => {
-  //       runInAction(() => {
-  //         this.todoArray = items;
-  //         this.state = STATUS_MAP.SUCCESS;
-  //       });
-  //     })
-  //     .catch(() => {
-  //       runInAction(() => {
-  //         this.state = STATUS_MAP.ERROR;
-  //       });
-  //     });
+  // toggleTodo(id: string) {
+  //   const todoId = this.todoArray.find((item) => item.id === id);
+  //   if (todoId) {
+  //     todoId.isDone = !todoId.isDone;
+  //   }
   // }
+
+  getTodos() {
+    this.state = STATUS_MAP.PENDING;
+    getTodosApi()
+      .then((items) => {
+        runInAction(() => {
+          this.todoArray = items;
+          this.state = STATUS_MAP.SUCCESS;
+        });
+      })
+      .catch(() => {
+        runInAction(() => {
+          this.state = STATUS_MAP.ERROR;
+        });
+      });
+  }
 
   postTodo(text: string) {
     this.state = STATUS_MAP.PENDING;
@@ -81,7 +87,7 @@ export class Todo {
       .then(() => {
         runInAction(() => {
           this.state = STATUS_MAP.SUCCESS;
-          this.getTodos(this.currentUser.id);
+          this.getTodos();
         });
       })
       .catch(() => {
@@ -97,7 +103,7 @@ export class Todo {
     deleteTodosApi(id)
       .then(() => {
         runInAction(() => {
-          this.getTodos(this.currentUser.id);
+          this.getTodos();
           this.state = STATUS_MAP.SUCCESS;
         });
       })
@@ -108,12 +114,29 @@ export class Todo {
       });
   }
 
-  getTodos(id: string) {
+  // TODO: текущая структура бэка не дает реализовать
+  // getTodos(userId: string) {
+  //   this.state = STATUS_MAP.PENDING;
+  //   getTodosApi(userId)
+  //     .then((items) => {
+  //       runInAction(() => {
+  //         this.todoArray = items[0].todos;
+  //         this.state = STATUS_MAP.SUCCESS;
+  //       });
+  //     })
+  //     .catch(() => {
+  //       runInAction(() => {
+  //         this.state = STATUS_MAP.ERROR;
+  //       });
+  //     });
+  // }
+
+  toggleTodo(id: string) {
     this.state = STATUS_MAP.PENDING;
-    getTodosApi(id)
-      .then((items) => {
+    toggleTodosApi(id)
+      .then(() => {
         runInAction(() => {
-          this.todoArray = items[0].todos;
+          this.getTodos();
           this.state = STATUS_MAP.SUCCESS;
         });
       })
