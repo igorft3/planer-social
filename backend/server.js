@@ -1,17 +1,9 @@
-const http = require("node:http");
+const express = require("express");
+const port = 3000;
+const app = express();
 
-const host = "localhost";
-const port = 5000;
+app.use(express.json());
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  // res.writeHead(200, {"Content-Type": "text/plain"});
-  res.end("Hello, World!\n");
-});
+app.use("/todos", require("./routes/todoRoutes"));
 
-server.listen(port, host, () => {
-  console.log(`Server running at http://${host}:${port}/`);
-});
-
-// const http = require('http');
+app.listen(port, () => console.log(`Server running on port ${port}`));
